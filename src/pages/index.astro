@@ -1,0 +1,21 @@
+---
+import AndorraMap from "../components/andorra-map.astro"
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+		<script src="/map.js" defer></script>
+	</head>
+	<body class="relative">
+		<div class="p-[16px] absolute top-0 left-0" id="info-box">
+			<h1></h1>
+			<span id="temperature"></span>
+		</div>
+		<AndorraMap />
+	</body>
+</html>
