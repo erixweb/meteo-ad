@@ -70,5 +70,24 @@ async function mapTemperature() {
         }
     })
 }
+async function mapWind() {
+    document.querySelectorAll("path").forEach(async (element) => {
+        const province = element.getAttribute("title")
 
-mapTemperature()
+        const req = await fetch(
+            `https://api.open-meteo.com/v1/ecmwf?latitude=${provinces[province].latitude}&longitude=${provinces[province].longitude}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,snowfall,weather_code,wind_speed_10m&forecast_days=5`
+        )
+        const res = await req.json()
+        const wind = res.hourly.wind_speed_10m[0]
+        if (wind < 5) {
+            element.style.fill = "#206de8"
+        } else if (wind > 5 && wind > 15) {
+            element.style.fill = "#bd20e8"
+        } else if (wind > 15 && wind < 25) {
+            element.style.fill = "#5ccf1f"
+        } else if (wind > 25 && wind < 35) {
+			element.style.fill = "#e6252e"
+		}
+    })
+}
+mapWind()
