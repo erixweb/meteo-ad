@@ -64,10 +64,9 @@ async function mapTemperature() {
         if (temperature < -5) {
             element.style.fill = "#eb1ccc"
         } else if (temperature > -5 && temperature <= 0) {
-            element.style.fill = "#1ce1eb"
+            element.style.fill = "url(#lesszero)"
         } else if (temperature > 0 && temperature < 5) {
-            element.style.fill = "#1c76eb"
-
+            element.style.fill = "url(#lessfive)"
         }
     })
 }
