@@ -32,40 +32,21 @@ const provinces = {
 		longitude: 1.5211,
 	},
 }
-/*
-document.querySelectorAll("path").forEach((element) => {
-	element.addEventListener("mouseenter", async () => {
-        const province = element.getAttribute("title")
-        
-		const req = await fetch(
-            `https://api.open-meteo.com/v1/ecmwf?latitude=${provinces[province].latitude}&longitude=${provinces[province].longitude}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,snowfall,weather_code,wind_speed_10m&forecast_days=5`
-            )
-            const res = await req.json()
-            
-        infoBox.querySelector("h1").innerHTML = province
-        infoBox.querySelector("#temperature").innerHTML = res.hourly.temperature_2m[0]
-        element.style.fill = `rgba(49, 54, 196, ${res.hourly.temperature_2m[0]})`
-	})
-	element.addEventListener("mouseleave", () => {
-        element.style.fill = "#f7b23b"
-	})
-})
-*/
 
 async function mapTemperature() {
 	document.querySelectorAll("path").forEach(async (element) => {
 		const province = element.getAttribute("title")
 
 		const req = await fetch(
-			`https://api.open-meteo.com/v1/ecmwf?latitude=${provinces[province].latitude}&longitude=${provinces[province].longitude}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,snowfall,weather_code,wind_speed_10m&forecast_days=5`
+			`https://api.open-meteo.com/v1/meteofrance?latitude=${provinces[province].latitude}&longitude=${provinces[province].latitude}&current=temperature_2m&hourly=temperature_2m`
 		)
 		const res = await req.json()
-		const temperature = res.hourly.temperature_2m[0]
+		const temperature = res.current.temperature_2m	
 		if (temperature < -5) {
-			element.style.fill = "#eb1ccc"
-		} else if (temperature > -5 && temperature <= 0) {
+			element.style.fill = "url(#menyscinc_temp)"
+		} else if (temperature >= -5 && temperature < 0) {
 			element.style.fill = "url(#lesszero)"
-		} else if (temperature > 0 && temperature < 5) {
+		} else if (temperature >= 0 && temperature < 5) {
 			element.style.fill = "url(#lessfive)"
 		}
 	})
@@ -93,7 +74,29 @@ async function mapWind() {
 		}
 	})
 }
+async function mapPrecipitacion() {
+	document.querySelectorAll("path").forEach(async (element) => {
+		const province = element.getAttribute("title")
 
+		const req = await fetch(
+			`https://api.open-meteo.com/v1/ecmwf?latitude=${provinces[province].latitude}&longitude=${provinces[province].longitude}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,snowfall,weather_code,wind_speed_10m&forecast_days=5`
+		)
+		const res = await req.json()
+		const wind = res.hourly.precipitation[0]
+		console.log(province, wind)
+		if (wind < 5) {
+			element.style.fill = "#206de8"
+		} else if (wind >= 5 && wind < 15) {
+			element.style.fill = "#bd20e8"
+		} else if (wind >= 15 && wind < 25) {
+			element.style.fill = "#5ccf1f"
+		} else if (wind >= 25 && wind < 35) {
+			element.style.fill = "#e6252e"
+		} else if (wind >= 35) {
+			element.style.fill = "#e6252e"
+		}
+	})
+}
 const url = new URL(window.location.href)
 
 const veure = url.searchParams.get("veure")
@@ -102,4 +105,6 @@ if (veure === "temperatura" || !veure) {
 	mapTemperature()
 } else if (veure === "vent") {
     mapWind()
+} else if (veure === "precipitacio") {
+	mapPrecipitacion()
 }
